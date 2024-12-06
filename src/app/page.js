@@ -1,101 +1,123 @@
+"use client";
 import Image from "next/image";
+import {useState} from 'react';
 
+const api={
+  key:"3fc8ebcdaf682fbb37c380d212f393ea",
+  base:"https://api.openweathermap.org/data/2.5/"
+}
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [colds,setCold]=useState('');
+  const [hots,sethot]=useState('');
+  
+    const cold=["Wow its cold",
+                "Better grab a jacket",
+                "Lets make hot choclate"];
+    const hot=["yikes its hot",
+                "Very sunny today",
+                "Lets go eat some ice cream"
+    ];
+  const[query,setQuery]=useState('');
+  const[weather,setWeather]=useState('');
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const search= evt =>{
+    if(evt.key === "Enter"){
+      fetch(`${api.base}weather?q=${query}&units=metric&APPID=${api.key}`)
+      .then( res => res.json())
+      .then(result => {
+        setQuery('');
+        setWeather(result);
+        const randomIndex = Math.floor(Math.random() *3); 
+        setCold(cold[randomIndex]);
+        sethot(hot[randomIndex]);
+      });
+    }
+  }                                 
+
+  const dateBuilder=()=>{
+    let date= String(new window.Date());
+    date=date.slice(3,15)
+    return date;
+  }
+
+  return (
+<div className={(typeof weather.main != "undefined") ? ((weather.main.temp > 16) ? 'app warm' : 'app') : 'app'}  >
+    <main>
+      <div className="search-box block w-full p-[15px] bg-gray-600 bg-opacity-5 
+       focus:bg-white focus:bg-opacity-75 
+       -mt-[25px]  
+       transition ease-linear duration-[400ms]  
+       appearance-none bg-none border-none outline-none 
+       mb-[75px]">
+
+        <input type="text" className="search-bar
+        
+        text-black
+            block w-full p-[15px] 
+          bg-gray-50 bg-opacity-5
+           focus:bg-white focus:bg-opacity-75  
+           shadow-[0px_5px_0px_rgba(0,0,0,0.2)] 
+           transition ease-linear duration-[400ms] 
+           appearance-none bg-none border-none outline-none" 
+           placeholder="search..." 
+           onChange={e =>setQuery(e.target.value)} 
+           value={query} 
+           onKeyDown={search}></input>
+      </div>
+
+    {(typeof weather.main != "undefined") ? (
+    <div>
+      <div className="location-box
+      text-white text-2xl font-medium text-center
+      shadow-[3px 3px rgba(50,50,70,0.5)]
+      text-white
+        text-[20px]	
+        font-light	
+        italic
+        text-center shadow-[2px 2px rgba(50,50,70,0.5)] ">
+
+        <div className="location
+        text-white text-2xl font-medium text-center
+      shadow-[3px 3px rgba(50,50,70,0.5)]
+        ">{weather.name},{weather.sys.country}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        <div className="date
+        text-white
+        text-[20px]	
+        font-light	
+        italic
+        text-center shadow-[2px 2px rgba(50,50,70,0.5)]
+        ">{dateBuilder()}</div> 
+      </div>
+
+      <div className="flex justify-center items-center">
+      <div className="weather-box 
+      text-center
+      relative inline-block my-[30px] mx-auto bg-[rgba(255,255,255,0.2)] rounded-[16px] p-[15px] px-[25px] text-white text-[102px] font-extrabold shadow-[3px 6px rgba(50,50,70,0.5)] shadow-[3px 6px rgba(0,0,0,0.2)]
+      weather text-white text-[48px] font-bold shadow-[3px 3px rgba(50,50,70,0.5)]
+              hover:bg-gray-500 hover:bg-opacity-50
+        transition duration-300 ease-in-out
+      ">
+        <div className="temp
+        relative inline-block my-[30px] mx-auto bg-[rgba(255,255,255,0.2)] rounded-[16px] p-[15px] px-[25px] text-white text-[102px] font-extrabold shadow-[3px 6px rgba(50,50,70,0.5)] text-center shadow-[3px 6px rgba(0,0,0,0.2)]
+        hover:bg-white hover:bg-opacity-50
+        transition duration-300 ease-in-out
+        ">
+          {Math.round(weather.main.temp)}°c
+        </div>
+        <div className="weather
+        weather text-white text-[48px] font-bold shadow-[3px 3px rgba(50,50,70,0.5)]
+        ">{weather.weather[0].main}</div>
+      </div>
+      </div>
+
+      <div className=" text-center italic font-bold text-2xl transition duration-500">
+        {(weather.main.temp <16)?  `${colds}`:`${hots}`}
+      </div>
+
+    </div>
+    ):('')}
+    </main>
     </div>
   );
 }

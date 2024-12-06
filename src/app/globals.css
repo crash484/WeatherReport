@@ -19,3 +19,53 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.app {
+  background-size: cover; /* Ensures the image covers the screen */
+  background-position: center; /* Centers the image */
+  background-repeat: no-repeat; /* Prevents tiling */
+  width: 100vw;
+  height: 100vh;
+  transition: background-image 0.5s ease-out; /* Smooth transition */
+}
+
+/* Default image for larger screens */
+@media (min-width: 768px) {
+  .app {
+    background-image: url('/BleachColdPic.jpg');
+  }
+}
+
+@media (min-width: 768px) {
+  .app.warm {
+    background-image: url('/largeWarmPic.jpg');
+  }
+}
+
+/* Image for smaller screens (e.g., phones) */
+@media (max-width: 767px) {
+  .app {
+    background-image: url('/cold-bg.jpg');
+  }
+}
+
+
+@media (max-width: 767px) {
+.app.warm{
+  background-image: url('/WarmBeachPic.jpg');
+
+}
+}
+
+main{
+  min-height: 100vh;
+  background-image: linear-gradient(to bottom, rgba(0,0,0,0.2),rgba(0,0,0,0.75));
+  padding: 25px;
+}
+
+
+.search-box .search-bar {
+  border-radius: 16px 16px 16px 16px;
+}
+
+
